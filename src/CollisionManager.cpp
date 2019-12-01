@@ -152,10 +152,13 @@ bool CollisionManager::lineRectCheck(glm::vec2 line1Start, glm::vec2 line1End, g
 	return false;
 }
 
-float CollisionManager::circleAABBSquaredDistance(glm::vec2 circleCentre, int circleRadius, glm::vec2 boxStart, int boxWidth, int boxHeight)
+float CollisionManager::circleAABBSquaredDistance(glm::vec2 circleCentre, int circleRadius, glm::vec2 boxStart, int boxWidth, int boxHeight, ECollisionSide& result)
 {
 	//Week13 ppt circle vs AABB(box) P.43
 	auto dx = std::max(boxStart.x - circleCentre.x, 0.f);
+	//if(dx == 0.f)
+	//	result = ECollisionSide::
+
 	dx = std::max(dx, circleCentre.x - (boxStart.x + boxWidth));
 
 	auto dy = std::max(boxStart.y - circleCentre.y, 0.f);
@@ -165,7 +168,7 @@ float CollisionManager::circleAABBSquaredDistance(glm::vec2 circleCentre, int ci
 
 }
 
-bool CollisionManager::circleAABBCheck(GameObject* object1, GameObject* object2)
+bool CollisionManager::circleAABBCheck(GameObject* object1, GameObject* object2, ECollisionSide& result)
 {
 	//circle
 	glm::vec2 circleCentre = object1->getPosition();
@@ -177,29 +180,29 @@ bool CollisionManager::circleAABBCheck(GameObject* object1, GameObject* object2)
 	glm::vec2 boxStart = object2->getPosition() - glm::vec2(boxWidth * 0.5, boxHeight * 0.5);
 	
 
-	if (circleAABBSquaredDistance(circleCentre, circleRadius, boxStart, boxWidth, boxHeight) <= (circleRadius * circleRadius))
+	if (circleAABBSquaredDistance(circleCentre, circleRadius, boxStart, boxWidth, boxHeight, result) <= (circleRadius * circleRadius))
 	{
-		if (!object2->getIsColliding()) {
+		//if (!object2->getIsColliding()) {
 
-			object2->setIsColliding(true);
+		//	object2->setIsColliding(true);
 
-			switch (object2->getType()) {
-			case PLANET:
-				std::cout << "Collision with Planet!" << std::endl;
-				TheSoundManager::Instance()->playSound("yay", 0);
-				break;
-			case MINE:
-				std::cout << "Collision with Mine!" << std::endl;
-				TheSoundManager::Instance()->playSound("thunder", 0);
-				break;
-			default:
-				//std::cout << "Collision with unknown type!" << std::endl;
-				break;
-			}
+		//	switch (object2->getType()) {
+		//	case PLANET:
+		//		std::cout << "Collision with Planet!" << std::endl;
+		//		TheSoundManager::Instance()->playSound("yay", 0);
+		//		break;
+		//	case MINE:
+		//		std::cout << "Collision with Mine!" << std::endl;
+		//		TheSoundManager::Instance()->playSound("thunder", 0);
+		//		break;
+		//	default:
+		//		//std::cout << "Collision with unknown type!" << std::endl;
+		//		break;
+		//	}
 
-			return true;
-		}
-		return false;
+			//return true;
+		//}
+		return true;
 	}
 	else
 	{

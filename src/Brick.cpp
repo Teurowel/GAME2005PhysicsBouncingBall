@@ -8,9 +8,9 @@
 
 Brick::Brick()
 {
-	TheTextureManager::Instance()->load("../Assets/textures/planet.png", "ball", TheGame::Instance()->getRenderer());
+	TheTextureManager::Instance()->load("../Assets/textures/Brick.png", "Brick", TheGame::Instance()->getRenderer());
 
-	glm::vec2 size = TheTextureManager::Instance()->getTextureSize("ball");
+	glm::vec2 size = TheTextureManager::Instance()->getTextureSize("Brick");
 	setWidth(size.x);
 	setHeight(size.y);
 
@@ -38,7 +38,7 @@ void Brick::draw()
 	int Width = getWidth();
 	int Height = getHeight();
 
-	TheTextureManager::Instance()->draw("ball", xComponent - (Width * 0.5f), yComponent - (Height * 0.5f),
+	TheTextureManager::Instance()->draw("Brick", xComponent - (Width * 0.5f), yComponent - (Height * 0.5f),
 		TheGame::Instance()->getRenderer(), 0.f, 255);
 }
 

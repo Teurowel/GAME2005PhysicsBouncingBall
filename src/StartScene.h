@@ -9,6 +9,7 @@
 #include "Planet.h"
 #include "Mine.h"
 #include "Ball.h"
+#include "Brick.h"
 #include "CollisionManager.h"
 #include "SoundManager.h"
 
@@ -42,6 +43,9 @@ private:
 
 	//Ball
 	Ball* m_pBall;
+
+	//Brick
+	Brick* m_pBrick;
 
 	glm::vec2 m_mousePosition;
 

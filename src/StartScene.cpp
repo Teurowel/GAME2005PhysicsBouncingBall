@@ -25,6 +25,7 @@ void StartScene::draw()
 //	m_pPlanet->draw();
 	//m_pMine->draw();
 	m_pBall->draw();
+	m_pBrick->draw();
 
 	// ImGui Rendering section - DO NOT MOVE OR DELETE
 	if (m_displayUI)
@@ -40,7 +41,10 @@ void StartScene::draw()
 		//Util::DrawCircle(m_pShip->getPosition(), std::max(m_pShip->getWidth(), m_pShip->getHeight()) * 0.5f);
 		//Util::DrawCircle(m_pPlanet->getPosition(), std::max(m_pPlanet->getWidth(), m_pPlanet->getHeight()) * 0.5f);
 		//Util::DrawCircle(m_pMine->getPosition(), std::max(m_pMine->getWidth(), m_pMine->getHeight()) * 0.5f);
+	
+		
 		Util::DrawCircle(m_pBall->getPosition(), std::max(m_pBall->getWidth(), m_pBall->getHeight()) * 0.5f);
+		Util::DrawRect(m_pBrick->getPosition() - glm::vec2(m_pBrick->getWidth() * 0.5f, m_pBrick->getHeight() * 0.5f), m_pBrick->getWidth(), m_pBrick->getHeight());
 	}
 }
 
@@ -61,7 +65,11 @@ void StartScene::update()
 	//CollisionManager::AABBCheck(m_pShip, m_pMine);
 
 	//CollisionManager::circleAABBCheck(m_pShip, m_pPlanet);
-	//CollisionManager::circleAABBCheck(m_pShip, m_pMine);
+	CollisionManager::ECollisionSide colResult;
+	if (CollisionManager::circleAABBCheck(m_pBall, m_pBrick, colResult))
+	{
+		int a = 0;
+	}
 	
 	//Ground collision check
 	if (m_pBall->getPosition().y + m_pBall->GetRadius() >= Config::SCREEN_HEIGHT)
@@ -129,6 +137,7 @@ void StartScene::clean()
 
 	//delete m_pShip;
 	delete m_pBall;
+	delete m_pBrick;
 
 	removeAllChildren();
 }
@@ -262,11 +271,15 @@ void StartScene::start()
 	//m_pMine->setPosition(glm::vec2(200.0f, 200.0));
 
 	m_pBall = new Ball();
-	m_pBall->setPosition(glm::vec2(20.f, 20.f));
+	m_pBall->setPosition(glm::vec2(100.f, 100.f));
 	m_pBall->setVelocity(glm::vec2(70.f, 0.f));
 	m_pBall->setAcceleration(glm::vec2(0.f, 0.f));
 	m_pBall->SetOnGround(false);
 	addChild(m_pBall);
+
+	m_pBrick = new Brick();
+	m_pBrick->setPosition(glm::vec2(Config::SCREEN_WIDTH * 0.5f, Config::SCREEN_HEIGHT * 0.5f));
+	addChild(m_pBrick);
 }
 
 void StartScene::m_ImGuiKeyMap()
@@ -635,8 +648,8 @@ void StartScene::m_move()
 
 
 
-
-	m_pBall->setAcceleration(glm::vec2(0.f, m_gravity));
+	/////////////////////////////Ball movement/////////////////////////////////
+	/*m_pBall->setAcceleration(glm::vec2(0.f, m_gravity));
 
 	glm::vec2 newBallVelocity = m_pBall->getVelocity();
 	newBallVelocity.x += m_pBall->getAcceleration().x * (1.0f / 60.0f) * m_PPM;
@@ -647,5 +660,8 @@ void StartScene::m_move()
 	glm::vec2 newBallPosition = m_pBall->getPosition();
 	newBallPosition.x += m_pBall->getVelocity().x * (1.0f / 60.0f) * m_PPM;
 	newBallPosition.y += m_pBall->getVelocity().y * (1.0f / 60.0f) * m_PPM;
-	m_pBall->setPosition(newBallPosition);
+	m_pBall->setPosition(newBallPosition);*/
+	//////////////////////////////////////////////////////////////////
+
+	m_pBrick->setPosition(glm::vec2(m_mousePosition.x, m_mousePosition.y));
 }
