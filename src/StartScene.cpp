@@ -67,12 +67,52 @@ void StartScene::update()
 	if (m_pBall->getPosition().y + m_pBall->GetRadius() >= Config::SCREEN_HEIGHT)
 	{
 		glm::vec2 newVel = m_pBall->getVelocity();
-		newVel.x *= 0.8f;
-		newVel.y *= -0.8f;
+
+		//newVel.x *= 0.95f;
+		if (abs(newVel.y) <= 6.f)
+		{
+			newVel.y = 0.f;
+			m_pBall->SetOnGround(true);
+		}
+		else
+		{
+			newVel.y *= -0.8f;
+		}
 		m_pBall->setVelocity(newVel);
 
 		glm::vec2 newPos = m_pBall->getPosition();
 		newPos.y -= 1.f;
+		m_pBall->setPosition(newPos);
+	}
+	else if (m_pBall->GetOnGround())
+	{
+		glm::vec2 newVel = m_pBall->getVelocity();
+
+		newVel.x *= 0.99f;
+		m_pBall->setVelocity(newVel);
+	}
+
+	//Right side collision check
+	if (m_pBall->getPosition().x + m_pBall->GetRadius() >= Config::SCREEN_WIDTH)
+	{
+		glm::vec2 newVel = m_pBall->getVelocity();
+		newVel.x *= -0.95f;
+		m_pBall->setVelocity(newVel);
+
+		glm::vec2 newPos = m_pBall->getPosition();
+		newPos.x -= 1.f;
+		m_pBall->setPosition(newPos);
+	}
+
+	//left side collision check
+	if (m_pBall->getPosition().x - m_pBall->GetRadius() <= 0)
+	{
+		glm::vec2 newVel = m_pBall->getVelocity();
+		newVel.x *= -0.95f;
+		m_pBall->setVelocity(newVel);
+
+		glm::vec2 newPos = m_pBall->getPosition();
+		newPos.x += 1.f;
 		m_pBall->setPosition(newPos);
 	}
 
@@ -222,9 +262,10 @@ void StartScene::start()
 	//m_pMine->setPosition(glm::vec2(200.0f, 200.0));
 
 	m_pBall = new Ball();
-	m_pBall->setPosition(glm::vec2(0.f, 0.f));
-	m_pBall->setVelocity(glm::vec2(20.f, 0.f));
+	m_pBall->setPosition(glm::vec2(20.f, 20.f));
+	m_pBall->setVelocity(glm::vec2(70.f, 0.f));
 	m_pBall->setAcceleration(glm::vec2(0.f, 0.f));
+	m_pBall->SetOnGround(false);
 	addChild(m_pBall);
 }
 
@@ -599,7 +640,8 @@ void StartScene::m_move()
 
 	glm::vec2 newBallVelocity = m_pBall->getVelocity();
 	newBallVelocity.x += m_pBall->getAcceleration().x * (1.0f / 60.0f) * m_PPM;
-	newBallVelocity.y += m_pBall->getAcceleration().y * (1.0f / 60.0f) * m_PPM;
+	if(m_pBall->GetOnGround() == false)
+		newBallVelocity.y += m_pBall->getAcceleration().y * (1.0f / 60.0f) * m_PPM;
 	m_pBall->setVelocity(newBallVelocity);
 
 	glm::vec2 newBallPosition = m_pBall->getPosition();

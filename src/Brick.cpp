@@ -1,4 +1,4 @@
-#include "ball.h"
+#include "Brick.h"
 #include "Game.h"
 #include "Util.h"
 #include "GLM/gtx/rotate_vector.hpp"
@@ -6,9 +6,9 @@
 #include "GLM/gtx/string_cast.hpp"
 #include <algorithm>
 
-Ball::Ball()
+Brick::Brick()
 {
-	TheTextureManager::Instance()->load("../Assets/textures/planet.png","ball", TheGame::Instance()->getRenderer());
+	TheTextureManager::Instance()->load("../Assets/textures/planet.png", "ball", TheGame::Instance()->getRenderer());
 
 	glm::vec2 size = TheTextureManager::Instance()->getTextureSize("ball");
 	setWidth(size.x);
@@ -24,18 +24,14 @@ Ball::Ball()
 	setIsColliding(false);
 	//setType(GameObjectType::BALL);
 	setState(State::IDLE);
-
-	m_fMass = 0.f;
-	m_fRadius = std::max(size.x, size.y) * 0.5f;
-	m_bOnGround = false;
 }
 
 
-Ball::~Ball()
+Brick::~Brick()
 {
 }
 
-void Ball::draw()
+void Brick::draw()
 {
 	int xComponent = getPosition().x;
 	int yComponent = getPosition().y;
@@ -46,15 +42,15 @@ void Ball::draw()
 		TheGame::Instance()->getRenderer(), 0.f, 255);
 }
 
-void Ball::update()
+void Brick::update()
 {
 	//move();
 	//getParent()->
 }
 
-void Ball::clean()
+void Brick::clean()
 {
-	
+
 }
 
 //void Ball::move()
@@ -94,14 +90,3 @@ void Ball::clean()
 //		setPosition(glm::vec2(getPosition().x, 600.0f));
 //	}
 //}
-
-void Ball::Reset()
-{
-	//setPosition(getInitialPosition());
-	setVelocity(glm::vec2(0.0f, 0.0f));
-	setAcceleration(glm::vec2(0.0f, 0.0f));
-
-	m_fMass = 0.f;
-
-	setIsColliding(false);
-}
