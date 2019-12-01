@@ -11,7 +11,7 @@ public :
 	CircleCollider(glm::vec2 centre = glm::vec2(0.f, 0.f), int radius = 0)
 		:centre(centre), radius(radius)
 	{
-		
+		colliderShape = CIRCLE;
 	}
 	~CircleCollider() {}
 

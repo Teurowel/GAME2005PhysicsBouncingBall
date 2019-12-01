@@ -21,9 +21,10 @@ void StartScene::draw()
 	/*m_pStartLabel->draw();
 	m_pInstructionsLabel->draw();*/
 
-	m_pShip->draw();	
-	m_pPlanet->draw();
-	m_pMine->draw();
+	//m_pShip->draw();	
+//	m_pPlanet->draw();
+	//m_pMine->draw();
+	m_pBall->draw();
 
 	// ImGui Rendering section - DO NOT MOVE OR DELETE
 	if (m_displayUI)
@@ -33,21 +34,25 @@ void StartScene::draw()
 		SDL_SetRenderDrawColor(TheGame::Instance()->getRenderer(), 255, 255, 255, 255);
 
 		//Util::DrawRect(m_pShip->getPosition() - glm::vec2(m_pShip->getWidth() * 0.5f, m_pShip->getHeight() *0.5f), m_pShip->getWidth(), m_pShip->getHeight());
-		Util::DrawRect(m_pPlanet->getPosition() - glm::vec2(m_pPlanet->getWidth() * 0.5f, m_pPlanet->getHeight() *0.5f), m_pPlanet->getWidth(), m_pPlanet->getHeight());
-		Util::DrawRect(m_pMine->getPosition() - glm::vec2(m_pMine->getWidth() * 0.5f, m_pMine->getHeight() *0.5f), m_pMine->getWidth(), m_pMine->getHeight());
+		//Util::DrawRect(m_pPlanet->getPosition() - glm::vec2(m_pPlanet->getWidth() * 0.5f, m_pPlanet->getHeight() *0.5f), m_pPlanet->getWidth(), m_pPlanet->getHeight());
+		//Util::DrawRect(m_pMine->getPosition() - glm::vec2(m_pMine->getWidth() * 0.5f, m_pMine->getHeight() *0.5f), m_pMine->getWidth(), m_pMine->getHeight());
 
-		Util::DrawCircle(m_pShip->getPosition(), std::max(m_pShip->getWidth(), m_pShip->getHeight()) * 0.5f);
+		//Util::DrawCircle(m_pShip->getPosition(), std::max(m_pShip->getWidth(), m_pShip->getHeight()) * 0.5f);
 		//Util::DrawCircle(m_pPlanet->getPosition(), std::max(m_pPlanet->getWidth(), m_pPlanet->getHeight()) * 0.5f);
 		//Util::DrawCircle(m_pMine->getPosition(), std::max(m_pMine->getWidth(), m_pMine->getHeight()) * 0.5f);
+		Util::DrawCircle(m_pBall->getPosition(), std::max(m_pBall->getWidth(), m_pBall->getHeight()) * 0.5f);
 	}
 }
 
 void StartScene::update()
 {
+	//m_move();
+	//m_pShip->update();
+	//m_pPlanet->update();
+	//m_pMine->update();
+	m_pBall->update();
+	
 	m_move();
-	m_pShip->update();
-	m_pPlanet->update();
-	m_pMine->update();
 
 	//CollisionManager::squaredRadiusCheck(m_pShip, m_pPlanet);
 	//CollisionManager::squaredRadiusCheck(m_pShip, m_pMine);
@@ -55,9 +60,22 @@ void StartScene::update()
 	//CollisionManager::AABBCheck(m_pShip, m_pPlanet);
 	//CollisionManager::AABBCheck(m_pShip, m_pMine);
 
-	CollisionManager::circleAABBCheck(m_pShip, m_pPlanet);
-	CollisionManager::circleAABBCheck(m_pShip, m_pMine);
+	//CollisionManager::circleAABBCheck(m_pShip, m_pPlanet);
+	//CollisionManager::circleAABBCheck(m_pShip, m_pMine);
 	
+	//Ground collision check
+	if (m_pBall->getPosition().y + m_pBall->GetRadius() >= Config::SCREEN_HEIGHT)
+	{
+		glm::vec2 newVel = m_pBall->getVelocity();
+		newVel.x *= 0.8f;
+		newVel.y *= -0.8f;
+		m_pBall->setVelocity(newVel);
+
+		glm::vec2 newPos = m_pBall->getPosition();
+		newPos.y -= 1.f;
+		m_pBall->setPosition(newPos);
+	}
+
 	if (m_displayUI)
 	{
 		m_updateUI();
@@ -69,7 +87,8 @@ void StartScene::clean()
 	/*delete m_pStartLabel;
 	delete m_pInstructionsLabel;*/
 
-	delete m_pShip;
+	//delete m_pShip;
+	delete m_pBall;
 
 	removeAllChildren();
 }
@@ -186,21 +205,27 @@ void StartScene::start()
 		"../Assets/audio/thunder.ogg", 
 		"thunder", SOUND_SFX);
 
-	m_position = glm::vec2(100.0f, 100.0f);
-	m_pShip = new Ship();
-	m_pShip->setPosition(m_position);
-	addChild(m_pShip);
+	//m_position = glm::vec2(100.0f, 100.0f);
+	//m_pShip = new Ship();
+	//m_pShip->setPosition(m_position);
+	//addChild(m_pShip);
 
-	m_moveState = MOVE_IDLE;
-	m_speedFactor = glm::vec2(2.0f, 2.0f);
+	//m_moveState = MOVE_IDLE;
+	//m_speedFactor = glm::vec2(2.0f, 2.0f);
 
 	// Instantiate a Planet
-	m_pPlanet = new Planet();
-	m_pPlanet->setPosition(glm::vec2(200.0f, 100.0));
+	//m_pPlanet = new Planet();
+	//m_pPlanet->setPosition(glm::vec2(200.0f, 100.0));
 	
 	// Instantiate a Space Mine
-	m_pMine = new Mine();
-	m_pMine->setPosition(glm::vec2(200.0f, 200.0));
+	//m_pMine = new Mine();
+	//m_pMine->setPosition(glm::vec2(200.0f, 200.0));
+
+	m_pBall = new Ball();
+	m_pBall->setPosition(glm::vec2(0.f, 0.f));
+	m_pBall->setVelocity(glm::vec2(20.f, 0.f));
+	m_pBall->setAcceleration(glm::vec2(0.f, 0.f));
+	addChild(m_pBall);
 }
 
 void StartScene::m_ImGuiKeyMap()
@@ -332,6 +357,10 @@ void StartScene::m_updateUI()
 		/*m_respawnShips();
 		m_moveAlongPath = false;*/
 	}
+
+	ImGui::Text("Position: %.2f, %.2f", m_pBall->getPosition().x, m_pBall->getPosition().y);
+	ImGui::Text("Velocity: %.2f, %.2f", m_pBall->getVelocity().x, m_pBall->getVelocity().y);
+	ImGui::Text("Acceleration: %.2f, %.2f", m_pBall->getAcceleration().x, m_pBall->getAcceleration().y);
 
 	//ImGui::SameLine();
 
@@ -560,6 +589,21 @@ void StartScene::m_move()
 	}
 
 	
-	m_position = m_pShip->getPosition() + m_velocity * m_speedFactor; // +m_acceleration;
-	m_pShip->setPosition(m_position);
+	//m_position = m_pShip->getPosition() + m_velocity * m_speedFactor; // +m_acceleration;
+	//m_pShip->setPosition(m_position);
+
+
+
+
+	m_pBall->setAcceleration(glm::vec2(0.f, m_gravity));
+
+	glm::vec2 newBallVelocity = m_pBall->getVelocity();
+	newBallVelocity.x += m_pBall->getAcceleration().x * (1.0f / 60.0f) * m_PPM;
+	newBallVelocity.y += m_pBall->getAcceleration().y * (1.0f / 60.0f) * m_PPM;
+	m_pBall->setVelocity(newBallVelocity);
+
+	glm::vec2 newBallPosition = m_pBall->getPosition();
+	newBallPosition.x += m_pBall->getVelocity().x * (1.0f / 60.0f) * m_PPM;
+	newBallPosition.y += m_pBall->getVelocity().y * (1.0f / 60.0f) * m_PPM;
+	m_pBall->setPosition(newBallPosition);
 }

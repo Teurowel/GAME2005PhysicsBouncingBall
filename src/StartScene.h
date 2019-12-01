@@ -8,6 +8,7 @@
 #include "MoveState.h"
 #include "Planet.h"
 #include "Mine.h"
+#include "Ball.h"
 #include "CollisionManager.h"
 #include "SoundManager.h"
 
@@ -39,6 +40,9 @@ private:
 	// Mine Stuff
 	Mine* m_pMine;
 
+	//Ball
+	Ball* m_pBall;
+
 	glm::vec2 m_mousePosition;
 
 	// ImGui utility functions
@@ -53,7 +57,7 @@ private:
 
 	// Physics Variables
 	float m_gravity = 9.8f;
-	int m_PPM = 10; // pixels per meter
+	int m_PPM = 4; // pixels per meter
 	glm::vec2 m_position = glm::vec2(0.0f, 0.0f);
 	glm::vec2 m_velocity = glm::vec2(0.0f, 0.0f);
 	glm::vec2 m_acceleration = glm::vec2(0.0f, 0.0f);
