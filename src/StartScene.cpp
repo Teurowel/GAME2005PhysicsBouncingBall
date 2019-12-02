@@ -68,7 +68,82 @@ void StartScene::update()
 	CollisionManager::ECollisionSide colResult;
 	if (CollisionManager::circleAABBCheck(m_pBall, m_pBrick, colResult))
 	{
-		int a = 0;
+		if (colResult == CollisionManager::ECollisionSide::LEFT)
+		{
+			glm::vec2 newVel = m_pBall->getVelocity();
+			glm::vec2 newPos = m_pBall->getPosition();
+
+			if (newVel.x >= 0)
+			{
+				newVel.x *= -1.1f;
+				
+			}
+			else
+			{
+				newVel.x *= 1.1f;
+			}
+			newPos.x -= 1.f;
+
+			m_pBall->setVelocity(newVel);
+			m_pBall->setPosition(newPos);
+		}
+		else if (colResult == CollisionManager::ECollisionSide::RIGHT)
+		{
+			glm::vec2 newVel = m_pBall->getVelocity();
+			glm::vec2 newPos = m_pBall->getPosition();
+
+			if (newVel.x <= 0)
+			{
+				newVel.x *= -1.1f;
+			}
+			else
+			{
+				newVel.x *= 1.1f;
+			}
+			newPos.x += 1.f;
+
+			m_pBall->setVelocity(newVel);
+			m_pBall->setPosition(newPos);
+		}
+		else if (colResult == CollisionManager::ECollisionSide::TOP)
+		{
+			glm::vec2 newVel = m_pBall->getVelocity();
+			glm::vec2 newPos = m_pBall->getPosition();
+
+			if (newVel.y >= 0)
+			{
+				newVel.y *= -1.4f;
+			}
+			else
+			{
+				newVel.x *= 1.4f;
+			}
+			newPos.y -= 1.f;
+
+			m_pBall->setVelocity(newVel);
+			m_pBall->setPosition(newPos);
+
+			if (m_pBall->GetOnGround())
+				m_pBall->SetOnGround(false);
+		}
+		else if (colResult == CollisionManager::ECollisionSide::BOTTOM)
+		{
+			glm::vec2 newVel = m_pBall->getVelocity();
+			glm::vec2 newPos = m_pBall->getPosition();
+
+			if (newVel.y <= 0)
+			{
+				newVel.y *= -1.4f;
+			}
+			else
+			{
+				newVel.x *= 1.4f;
+			}
+			newPos.y += 1.f;
+
+			m_pBall->setVelocity(newVel);
+			m_pBall->setPosition(newPos);
+		}
 	}
 	
 	//Ground collision check
@@ -649,7 +724,7 @@ void StartScene::m_move()
 
 
 	/////////////////////////////Ball movement/////////////////////////////////
-	/*m_pBall->setAcceleration(glm::vec2(0.f, m_gravity));
+	m_pBall->setAcceleration(glm::vec2(0.f, m_gravity));
 
 	glm::vec2 newBallVelocity = m_pBall->getVelocity();
 	newBallVelocity.x += m_pBall->getAcceleration().x * (1.0f / 60.0f) * m_PPM;
@@ -660,7 +735,7 @@ void StartScene::m_move()
 	glm::vec2 newBallPosition = m_pBall->getPosition();
 	newBallPosition.x += m_pBall->getVelocity().x * (1.0f / 60.0f) * m_PPM;
 	newBallPosition.y += m_pBall->getVelocity().y * (1.0f / 60.0f) * m_PPM;
-	m_pBall->setPosition(newBallPosition);*/
+	m_pBall->setPosition(newBallPosition);
 	//////////////////////////////////////////////////////////////////
 
 	m_pBrick->setPosition(glm::vec2(m_mousePosition.x, m_mousePosition.y));

@@ -156,15 +156,25 @@ float CollisionManager::circleAABBSquaredDistance(glm::vec2 circleCentre, int ci
 {
 	//Week13 ppt circle vs AABB(box) P.43
 	auto dx = std::max(boxStart.x - circleCentre.x, 0.f);
-	//if(dx == 0.f)
-	//	result = ECollisionSide::
-
-	dx = std::max(dx, circleCentre.x - (boxStart.x + boxWidth));
+	auto dx2 = std::max(dx, circleCentre.x - (boxStart.x + boxWidth));
 
 	auto dy = std::max(boxStart.y - circleCentre.y, 0.f);
-	dx = std::max(dx, circleCentre.y - (boxStart.y + boxHeight));
+	auto dy2 = std::max(dy, circleCentre.y - (boxStart.y + boxHeight));
 
-	return (dx * dx) + (dy * dy);
+	if (dx == dx2)
+		result = ECollisionSide::LEFT;
+	if (dx != dx2)
+		result = ECollisionSide::RIGHT;
+	if (dx == 0 && dx2 == 0)
+	{
+		if (dy == dy2)
+			result = ECollisionSide::TOP;
+		else if(dy != dy2)
+			result = ECollisionSide::BOTTOM;
+	}
+
+
+	return (dx2 * dx2) + (dy2 * dy2);
 
 }
 
@@ -182,9 +192,10 @@ bool CollisionManager::circleAABBCheck(GameObject* object1, GameObject* object2,
 
 	if (circleAABBSquaredDistance(circleCentre, circleRadius, boxStart, boxWidth, boxHeight, result) <= (circleRadius * circleRadius))
 	{
-		//if (!object2->getIsColliding()) {
+		if (!object2->getIsColliding()) 
+		{
 
-		//	object2->setIsColliding(true);
+			object2->setIsColliding(true);
 
 		//	switch (object2->getType()) {
 		//	case PLANET:
@@ -200,9 +211,9 @@ bool CollisionManager::circleAABBCheck(GameObject* object1, GameObject* object2,
 		//		break;
 		//	}
 
-			//return true;
-		//}
-		return true;
+			return true;
+		}
+		return false;
 	}
 	else
 	{
